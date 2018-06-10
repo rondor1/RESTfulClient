@@ -6,16 +6,23 @@ import android.net.wifi.WifiManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import retrofit2.Retrofit;
+import com.example.rtrk.restfulclient.model.RESTfulObject;
+import com.example.rtrk.restfulclient.remote.ApiUtils;
+import com.example.rtrk.restfulclient.remote.UserService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static int LOGOUT_RESULT = 13;
 
     ImageView mImageView;   //<! Top image on login screen
     EditText mUsernameText; //<! Username edit box
@@ -23,8 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button mLoginButton;    //<! Login button on the bottom of the page
     WifiManager mWifiManager;   //<! Monitors if device is connected
     ResourcesCompat mResourcesCompat;   //<! Image resources
-    Intent mRESTfulCommIntent;  //<! Used for transition to restful communicationo
-    Bundle mBundle;
+    Intent mRESTfulCommIntent;  //<! Used for transition to restful communication
+    UserService mUserService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mUsernameText = (EditText) this.findViewById(R.id.usernameBox);
         mPasswordText = (EditText) this.findViewById(R.id.passwordBox);
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        mUserService = ApiUtils.getUserService();
+        mRESTfulCommIntent = new Intent(this, RESTfulCommunication.class);
 
         mImageView.setImageDrawable(mResourcesCompat.getDrawable(getResources(),
                 R.drawable.splash_screen, null));
@@ -47,25 +56,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view){
         switch (view.getId()){
             case  R.id.loginButton :
-                mRESTfulCommIntent = new Intent(this, RESTfulCommunication.class);
-                mBundle = new Bundle();
                 /*Check if WiFi is enabled*/
                 if(mWifiManager.isWifiEnabled()){
                     /*Check if device is connected to WiFi network*/
                     if(mWifiManager.getConnectionInfo().getNetworkId() != -1){
-                        if(mUsernameText.getText().toString().isEmpty() ||
-                                mPasswordText.getText().toString().isEmpty()){
-                            Toast.makeText(this, "Username or Password missing!",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        else{
-                            mBundle.putString(getResources().getString(R.string.username),
+                        if(validateLoginData(mUsernameText.getText().toString(),
+                                mPasswordText.getText().toString()) == true){
+                            serverLogin(mUsernameText.getText().toString(),
                                     mUsernameText.getText().toString());
-                            mBundle.putString(getResources().getString(R.string.password),
-                                    mPasswordText.getText().toString());
-                            if(login(mBundle)) {
-                                startActivityForResult(mRESTfulCommIntent, RESULT_OK);
-                            }
                         }
                     }
                 }
@@ -73,12 +71,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private boolean login(Bundle mBundle){
+    /***
+     * @func validateLoginData checks if users credentials are given.
+     * @param username Part of the users credential communicating with RESTful Server
+     * @param password Part of the users credential communicating with RESTful Server
+     * @return true if credentials given, else false
+     */
+    private boolean validateLoginData(String username, String password) {
         boolean returnValue = true;
-        String mUsername = mBundle.getString(getResources().getString(R.string.username));
-        String mPassword = mBundle.getString(getResources().getString(R.string.password));
-
+        if(username == null || username.trim().length() == 0){
+            returnValue = false;
+            Toast.makeText(this, getApplicationContext().getResources()
+                    .getText(R.string.usernameMissing), Toast.LENGTH_SHORT).show();
+        }
+        else if(password == null || password.trim().length() == 0 ){
+            returnValue = false;
+            Toast.makeText(this, getApplicationContext().getResources().
+                    getText(R.string.passwordMissing), Toast.LENGTH_SHORT).show();
+        }
 
         return returnValue;
+    }
+
+    /***
+     * @func serverLogin Tries to connect to server based on given user credentials
+     * @param username Part of the users credential communicating with RESTful Server
+     * @param password Part of the users credential communicating with RESTful Server
+     */
+    private void serverLogin(String username, String password){
+
+        Call<RESTfulObject> mCall = mUserService.login(username, password);
+        mCall.enqueue(new Callback<RESTfulObject>() {
+            @Override
+            public void onResponse(Call<RESTfulObject> call, Response<RESTfulObject> response) {
+                if(response.isSuccessful() == true){
+                    RESTfulObject mRESTfulObject = response.body();
+                    if(mRESTfulObject.getmRESTfulMessage() == "true"){
+                        startActivityForResult(mRESTfulCommIntent, LOGOUT_RESULT);
+                    }
+                    else{
+                        Toast.makeText(MainActivity.this, getApplicationContext()
+                                        .getResources().getText(R.string.wrongCredentials),
+                                        Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(MainActivity.this, getApplicationContext().getResources()
+                                    .getText(R.string.tryAgain),Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RESTfulObject> call, Throwable throwable) {
+                Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

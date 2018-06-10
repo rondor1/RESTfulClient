@@ -55,7 +55,6 @@
         android:textAlignment="center"
         android:layout_gravity="center|bottom"
         android:textAllCaps="false"
-        android:clickable="true"
         android:text="@string/loginButton"
         android:id="@+id/loginButton"/>
 </LinearLayout>
