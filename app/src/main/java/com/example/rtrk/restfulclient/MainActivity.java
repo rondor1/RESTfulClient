@@ -6,16 +6,19 @@ import android.net.wifi.WifiManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.rtrk.restfulclient.model.RESTfulObject;
 import com.example.rtrk.restfulclient.remote.ApiUtils;
 import com.example.rtrk.restfulclient.remote.UserService;
 
+import org.json.JSONObject;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,19 +34,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     WifiManager mWifiManager;   //<! Monitors if device is connected
     ResourcesCompat mResourcesCompat;   //<! Image resources
     Intent mRESTfulCommIntent;  //<! Used for transition to restful communication
-    UserService mUserService;
+    JSONObject mJSONObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mJSONObject = null;
+
         mLoginButton = (Button) this.findViewById(R.id.loginButton);
         mImageView = (ImageView) this.findViewById(R.id.imageView);
         mUsernameText = (EditText) this.findViewById(R.id.usernameBox);
         mPasswordText = (EditText) this.findViewById(R.id.passwordBox);
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        mUserService = ApiUtils.getUserService();
         mRESTfulCommIntent = new Intent(this, RESTfulCommunication.class);
 
         mImageView.setImageDrawable(mResourcesCompat.getDrawable(getResources(),
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if(validateLoginData(mUsernameText.getText().toString(),
                                 mPasswordText.getText().toString()) == true){
                             serverLogin(mUsernameText.getText().toString(),
-                                    mUsernameText.getText().toString());
+                                    mPasswordText.getText().toString());
                         }
                     }
                 }
@@ -100,31 +104,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void serverLogin(String username, String password){
 
-        Call<RESTfulObject> mCall = mUserService.login(username, password);
-        mCall.enqueue(new Callback<RESTfulObject>() {
+        Call<ResponseBody> mCall = ApiUtils.getUserService().login(username, password);
+        mCall.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<RESTfulObject> call, Response<RESTfulObject> response) {
-                if(response.isSuccessful() == true){
-                    RESTfulObject mRESTfulObject = response.body();
-                    if(mRESTfulObject.getmRESTfulMessage() == "true"){
-                        startActivityForResult(mRESTfulCommIntent, LOGOUT_RESULT);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.body() != null){
+                    try{
+                        mJSONObject = new JSONObject(response.body().string());
+                        if(mJSONObject.getString("ServerLogin").equals("Access permitted")){
+                            startActivityForResult(mRESTfulCommIntent, LOGOUT_RESULT);
+                        }
                     }
-                    else{
-                        Toast.makeText(MainActivity.this, getApplicationContext()
-                                        .getResources().getText(R.string.wrongCredentials),
-                                        Toast.LENGTH_SHORT).show();
+                    catch (Exception Exception){
+
                     }
-                }
-                else {
-                    Toast.makeText(MainActivity.this, getApplicationContext().getResources()
-                                    .getText(R.string.tryAgain),Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<RESTfulObject> call, Throwable throwable) {
-                Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mUsernameText.clearComposingText();
+        mPasswordText.clearComposingText();
     }
 }

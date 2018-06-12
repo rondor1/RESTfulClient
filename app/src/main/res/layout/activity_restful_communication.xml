@@ -5,12 +5,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/Primary"
+    android:weightSum="8"
     tools:context=".RESTfulCommunication">
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:text="randomString"
-        android:id="@+id/clear"/>
+        android:layout_weight="1"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/InformationScreen"
+            android:textColor="@color/MainScreenText"
+            android:gravity="center"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Accent"
+            android:layout_gravity="center"
+            android:textSize="100dp"
+            android:layout_weight="7"
+            android:id="@+id/previewText"
+            />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:weightSum="1"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:text="@string/getCPU"
+            android:id="@+id/requestCPU"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:text="@string/getRAM"
+            android:id="@+id/requestRAM"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:text="@string/getStorage"
+            android:id="@+id/requestStorage"/>
+    </LinearLayout>
+
 </LinearLayout>

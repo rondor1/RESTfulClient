@@ -1,11 +1,25 @@
 <resources>
     <string name="app_name">RESTful Client</string>
     <!-- USER STRINGS. -->
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="loginButton">Login</string>
-    <string name="usernameMissing">Username required!</string>
-    <string name="passwordMissing">Password required!</string>
-    <string name="wrongCredentials">Wrong username or password!</string>
-    <string name="tryAgain">Error! Try logging in again!</string>
+
+        <!-- MAIN ACTIVITY. -->
+        <string name="username">Username</string>
+        <string name="password">Password</string>
+        <string name="loginButton">Login</string>
+        <string name="usernameMissing">Username required!</string>
+        <string name="passwordMissing">Password required!</string>
+        <string name="wrongCredentials">Wrong username or password!</string>
+        <string name="invalidResponse">Invalid response from server!</string>
+        <string name="tryAgain">Error! Try logging in again!</string>
+        <!-- RESTFUL COMMUNICATION. -->
+        <string name="getCPU">Get CPU Load</string>
+        <string name="getRAM">Get RAM Load</string>
+        <string name="getStorage">Get Storage Status</string>
+        <!-- RESTFUL MESSAGES. -->
+        <string name="CPU">cpu</string>
+        <string name="load">load</string>
+        <string name="RAM">ram</string>
+        <string name="Storage">storage</string>
+        <string name="Status">status</string>
+        <string name="InformationScreen">Alpha Board Information</string>
 </resources>
