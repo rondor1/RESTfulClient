@@ -108,22 +108,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.body() != null){
-                    try{
-                        mJSONObject = new JSONObject(response.body().string());
-                        if(mJSONObject.getString("ServerLogin").equals("Access permitted")){
-                            startActivityForResult(mRESTfulCommIntent, LOGOUT_RESULT);
-                        }
-                    }
-                    catch (Exception Exception){
+                if(response.isSuccessful()){
+                    if(response.body() != null){
+                        try{
+                            mJSONObject = new JSONObject(response.body().string());
+                            if(mJSONObject.getString("ServerLogin").equals("Access permitted")){
+                                startActivityForResult(mRESTfulCommIntent, LOGOUT_RESULT);
+                            }
+                            else{
+                                try{
+                                    /**LOGIN UNSUCCESSFUL, display message!**/
+                                    Toast.makeText(MainActivity.this,
+                                            mJSONObject.getString("ServerLogin"),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                catch (Exception excp){
 
+                                }
+                            }
+                        }
+                        catch (Exception Exception){
+                        }
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
+                Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

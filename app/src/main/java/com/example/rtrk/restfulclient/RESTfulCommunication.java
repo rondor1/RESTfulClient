@@ -1,13 +1,12 @@
 package com.example.rtrk.restfulclient;
 
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rtrk.restfulclient.remote.ApiUtils;
 
@@ -22,9 +21,26 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
 
     Button mCPUStatus;    //<!Send request for CPU load
     Button mRAMStatus;  //<! Send request for RAM Utilization
-    Button mStorageStatus;  //<! Send request for Storage usage
 
-    TextView mTextView;
+    ImageView mCPUImageView;
+    ImageView mRAMImageView;
+
+    /***
+     * Static text
+     */
+    TextView mCpuLoad;
+    TextView mCurrentCpuLoad;
+    TextView mTotalRam;
+    TextView mCurrentRamUtil;
+
+    /***
+     * Changeable values
+     */
+    TextView mCpuLoadVal;
+    TextView mCurrentCpuLoadVal;
+    TextView mVmemUtil;
+    TextView mPhysicalRAMUtil;
+
     JSONObject mJSONObject;
 
     @Override
@@ -34,26 +50,28 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
 
         mCPUStatus = (Button) this.findViewById(R.id.requestCPU);
         mRAMStatus = (Button) this.findViewById(R.id.requestRAM);
-        mStorageStatus = (Button) this.findViewById(R.id.requestStorage);
 
-        mTextView = (TextView) this.findViewById(R.id.previewText);
+        mCPUImageView = (ImageView) this.findViewById(R.id.cpuIcon);
+        mCPUImageView.getLayoutParams().height = 250;
+        mCPUImageView.getLayoutParams().width = 250;
+        mCPUImageView.setImageResource(R.drawable.cpu);
+
+
+        mRAMImageView = (ImageView) this.findViewById(R.id.ramIcon);
+        mRAMImageView.getLayoutParams().height = 250;
+        mRAMImageView.getLayoutParams().width = 250;
+        mRAMImageView.setImageResource(R.drawable.ram);
+
+        mCpuLoadVal = (TextView) this.findViewById(R.id.cpuStats);
+        mCurrentCpuLoadVal = (TextView) this.findViewById(R.id.currentProcCPUStats);
+        mVmemUtil = (TextView) this.findViewById(R.id.ramStats);
+        mPhysicalRAMUtil = (TextView) this.findViewById(R.id.currentProcRAMStats);
+
+
 
         mCPUStatus.setOnClickListener(this);
         mRAMStatus.setOnClickListener(this);
-        mStorageStatus.setOnClickListener(this);
 
-        mTextView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mTextView.clearComposingText();
-                if(mTextView.getText().equals("")){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }
-        });
     }
 
     @Override
@@ -66,10 +84,6 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
             case R.id.requestRAM :
                 getRAM(getApplicationContext().getResources().getText(R.string.RAM).toString(),
                         getApplicationContext().getResources().getText(R.string.load).toString());
-                break;
-            case R.id.requestStorage :
-                getStorageStatus(getApplicationContext().getResources().getText(R.string.Storage).toString(),
-                        getApplicationContext().getResources().getText(R.string.Status).toString());
                 break;
         }
     }
@@ -85,7 +99,8 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
                     {
                         try{
                             mJSONObject = new JSONObject(response.body().string());
-                            mTextView.setText(mJSONObject.getString("data"));
+                            mCpuLoadVal.setText(mJSONObject.getString("total_cpu_util")+"%");
+                            mCurrentCpuLoadVal.setText(mJSONObject.getString("current_proc_cpu_util")+"%");
                         }
                         catch (Exception exception){
                         }
@@ -96,7 +111,7 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
+                Toast.makeText(RESTfulCommunication.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -109,8 +124,12 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
                 if(response.isSuccessful() == true ){
                     if(response.body() != null){
                         try{
+
                             mJSONObject = new JSONObject(response.body().string());
-                            mTextView.setText(mJSONObject.getString("data"));
+                            mPhysicalRAMUtil.setText(mJSONObject.getString("vmem_util")+
+                                    getApplicationContext().getResources().getText(R.string.UnitName));
+                            mVmemUtil.setText(mJSONObject.getString("current_ram_util")+
+                                    getApplicationContext().getResources().getText(R.string.UnitName));
                         }
                         catch (Exception mException){
 
@@ -121,34 +140,9 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
+                Toast.makeText(RESTfulCommunication.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void getStorageStatus(String type, String data){
-        Call<ResponseBody> mCall = ApiUtils.getUserService().acquireData(type, data);
-        mCall.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful() == true){
-                    if(response.body() != null){
-                        try{
-                            mJSONObject = new JSONObject(response.body().string());
-                            mTextView.setText(mJSONObject.getString("data"));
-                        }
-                        catch (Exception expc){
-
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-
-            }
-        });
-    }
 }
-

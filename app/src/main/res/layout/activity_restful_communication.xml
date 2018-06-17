@@ -23,21 +23,141 @@
             android:textAllCaps="false"/>
     </LinearLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/Accent"
-            android:layout_gravity="center"
-            android:textSize="100dp"
             android:layout_weight="7"
-            android:id="@+id/previewText"
-            />
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="2">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/cpuIcon"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="2">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/TotalCPULoad"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:id="@+id/cpuLoad"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/CurrentProcessLoad"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:id="@+id/currentProcCpuLoad"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:gravity="center"
+                        android:id="@+id/cpuStats"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:gravity="center"
+                        android:id="@+id/currentProcCPUStats"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="2"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/ramIcon"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="2">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/ProcessRAMUsage"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:id="@+id/totalRAM"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/CurrentlyUsedRAM"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:id="@+id/currentProcRAMLoad"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:gravity="center"
+                        android:id="@+id/ramStats"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAllCaps="false"
+                        android:textColor="@color/MainScreenText"
+                        android:gravity="center"
+                        android:id="@+id/currentProcRAMStats"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:weightSum="1"
+        android:weightSum="2"
         android:orientation="horizontal">
         <Button
             android:layout_width="wrap_content"
@@ -55,14 +175,6 @@
             android:textAllCaps="false"
             android:text="@string/getRAM"
             android:id="@+id/requestRAM"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_weight="1"
-            android:textAllCaps="false"
-            android:text="@string/getStorage"
-            android:id="@+id/requestStorage"/>
     </LinearLayout>
 
 </LinearLayout>

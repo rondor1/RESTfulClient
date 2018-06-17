@@ -22,4 +22,10 @@
         <string name="Storage">storage</string>
         <string name="Status">status</string>
         <string name="InformationScreen">Alpha Board Information</string>
+        <!-- RESTFUL LAYOUT TEXT. -->
+        <string name="TotalCPULoad">Total CPU Load : </string>
+        <string name="CurrentProcessLoad">Current Process CPU Load :</string>
+        <string name="ProcessRAMUsage">Total physical RAM utilization  : </string>
+        <string name="CurrentlyUsedRAM">VMEM used by this process : </string>
+        <string name="UnitName">KB</string>
 </resources>
