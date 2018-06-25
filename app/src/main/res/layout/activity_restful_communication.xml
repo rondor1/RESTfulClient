@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/Primary"
-    android:weightSum="8"
+    android:weightSum="9"
     tools:context=".RESTfulCommunication">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
+        android:id="@+id/DiagScreenText"
         >
         <TextView
             android:layout_width="match_parent"
@@ -23,158 +24,51 @@
             android:textAllCaps="false"/>
     </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_weight="7"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="2">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:id="@+id/cpuIcon"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="2">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/TotalCPULoad"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:id="@+id/cpuLoad"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/CurrentProcessLoad"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:id="@+id/currentProcCpuLoad"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:gravity="center"
-                        android:id="@+id/cpuStats"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:gravity="center"
-                        android:id="@+id/currentProcCPUStats"
-                        />
-                </LinearLayout>
-            </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="6.5"
+        android:layout_below="@id/DiagScreenText"
+        android:layout_above="@id/buttonPanel"
+        android:id="@+id/DiagScrollView"
+        >
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="2"
-                >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:id="@+id/ramIcon"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="2">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/ProcessRAMUsage"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:id="@+id/totalRAM"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/CurrentlyUsedRAM"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:id="@+id/currentProcRAMLoad"
-                        />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:orientation="vertical"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:gravity="center"
-                        android:id="@+id/ramStats"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MainScreenText"
-                        android:gravity="center"
-                        android:id="@+id/currentProcRAMStats"
-                        />
-                </LinearLayout>
-            </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:textColor="@color/MainScreenText"
+            android:id="@+id/diagnosticsTextView"
+        />
 
-        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"
         android:weightSum="2"
-        android:orientation="horizontal">
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:id="@+id/buttonPanel">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="@string/getCPU"
-            android:id="@+id/requestCPU"/>
+            android:text="@string/performUpdate"
+            android:id="@+id/performAlphaUpdate"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
+            android:layout_gravity="bottom|right"
             android:layout_weight="1"
             android:textAllCaps="false"
-            android:text="@string/getRAM"
-            android:id="@+id/requestRAM"/>
+            android:text="@string/ChooseSetup"
+            android:id="@+id/setupCombiner"/>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

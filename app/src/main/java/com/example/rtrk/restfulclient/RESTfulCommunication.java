@@ -1,10 +1,16 @@
 package com.example.rtrk.restfulclient;
 
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,120 +25,91 @@ import retrofit2.Response;
 
 public class RESTfulCommunication extends AppCompatActivity implements View.OnClickListener{
 
-    Button mCPUStatus;    //<!Send request for CPU load
-    Button mRAMStatus;  //<! Send request for RAM Utilization
+    final long SLEEP_PERIOD = 2000;
 
-    ImageView mCPUImageView;
-    ImageView mRAMImageView;
+    Button mPerformUpdate;    //<!Send request for CPU load
+    Button mCombinerSetup;
+    Intent mCombinerIntent;
 
-    /***
-     * Static text
-     */
-    TextView mCpuLoad;
-    TextView mCurrentCpuLoad;
-    TextView mTotalRam;
-    TextView mCurrentRamUtil;
+    Thread mDiagnosticsThread;
 
     /***
      * Changeable values
      */
-    TextView mCpuLoadVal;
-    TextView mCurrentCpuLoadVal;
-    TextView mVmemUtil;
-    TextView mPhysicalRAMUtil;
+
+    TextView mDiagnosticsTextView;
 
     JSONObject mJSONObject;
+
+    Handler mDiagnosticsDataHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+        JSONObject receivedData = (JSONObject) msg.obj;
+            try{
+                mDiagnosticsTextView.setText(mJSONObject.getString("payload").toString());
+            }
+            catch (Exception exception){
+                exception.printStackTrace();
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restful_communication);
 
-        mCPUStatus = (Button) this.findViewById(R.id.requestCPU);
-        mRAMStatus = (Button) this.findViewById(R.id.requestRAM);
+        mPerformUpdate = (Button) this.findViewById(R.id.performAlphaUpdate);
+        mCombinerSetup = (Button) this.findViewById(R.id.setupCombiner);
 
-        mCPUImageView = (ImageView) this.findViewById(R.id.cpuIcon);
-        mCPUImageView.getLayoutParams().height = 250;
-        mCPUImageView.getLayoutParams().width = 250;
-        mCPUImageView.setImageResource(R.drawable.cpu);
+        mDiagnosticsThread = new Thread(mDiagnosticsRunnable);
+        mDiagnosticsThread.start();
+        mCombinerIntent = new Intent(this, CombinerSetup.class);
 
+        mDiagnosticsTextView = (TextView) findViewById(R.id.diagnosticsTextView);
 
-        mRAMImageView = (ImageView) this.findViewById(R.id.ramIcon);
-        mRAMImageView.getLayoutParams().height = 250;
-        mRAMImageView.getLayoutParams().width = 250;
-        mRAMImageView.setImageResource(R.drawable.ram);
-
-        mCpuLoadVal = (TextView) this.findViewById(R.id.cpuStats);
-        mCurrentCpuLoadVal = (TextView) this.findViewById(R.id.currentProcCPUStats);
-        mVmemUtil = (TextView) this.findViewById(R.id.ramStats);
-        mPhysicalRAMUtil = (TextView) this.findViewById(R.id.currentProcRAMStats);
-
-
-
-        mCPUStatus.setOnClickListener(this);
-        mRAMStatus.setOnClickListener(this);
+        mPerformUpdate.setOnClickListener(this);
+        mCombinerSetup.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View view){
         switch (view.getId()){
-            case R.id.requestCPU :
-                getCPU(getApplicationContext().getResources().getText(R.string.CPU).toString(),
-                        getApplicationContext().getResources().getText(R.string.load).toString());
+            case R.id.performAlphaUpdate :
+                performAppUpdate();
                 break;
-            case R.id.requestRAM :
-                getRAM(getApplicationContext().getResources().getText(R.string.RAM).toString(),
-                        getApplicationContext().getResources().getText(R.string.load).toString());
+            case R.id.setupCombiner:
+                startActivityForResult(mCombinerIntent, RESULT_OK);
+                Log.d("ROBERT", "Clicked intent switch");
                 break;
         }
     }
 
-    private void getCPU(String type, String data)
-    {
-        Call<ResponseBody> mCall = ApiUtils.getUserService().acquireData(type, data);
+
+    private void performAppUpdate(){
+        Call<ResponseBody> mCall = ApiUtils.getUserService().sendRequest(getApplicationContext()
+                .getString(R.string.updaterEvent),
+                getApplicationContext()
+                .getString(R.string.ipAddress),getApplicationContext().getString(R.string.port),
+                getApplicationContext().getString(R.string.packageName));
         mCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful() == true){
-                    if(response.body() != null)
-                    {
-                        try{
-                            mJSONObject = new JSONObject(response.body().string());
-                            mCpuLoadVal.setText(mJSONObject.getString("total_cpu_util")+"%");
-                            mCurrentCpuLoadVal.setText(mJSONObject.getString("current_proc_cpu_util")+"%");
-                        }
-                        catch (Exception exception){
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Toast.makeText(RESTfulCommunication.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void getRAM(String type, String data){
-        Call<ResponseBody> mCall = ApiUtils.getUserService().acquireData(type,data);
-        mCall.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful() == true ){
+                if(response.isSuccessful()){
                     if(response.body() != null){
                         try{
-
-                            mJSONObject = new JSONObject(response.body().string());
-                            mPhysicalRAMUtil.setText(mJSONObject.getString("vmem_util")+
-                                    getApplicationContext().getResources().getText(R.string.UnitName));
-                            mVmemUtil.setText(mJSONObject.getString("current_ram_util")+
-                                    getApplicationContext().getResources().getText(R.string.UnitName));
+                            Toast.makeText(RESTfulCommunication.this, getApplicationContext().
+                                            getString(R.string.updateStatus) +
+                                            response.body().string()
+                                    , Toast.LENGTH_SHORT).show();
                         }
-                        catch (Exception mException){
-
+                        catch (Exception exception){
+                            Toast.makeText(RESTfulCommunication.this, getApplicationContext().
+                                            getString(R.string.updateStatus) +
+                                            exception.getMessage()
+                                    , Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -140,9 +117,64 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Toast.makeText(RESTfulCommunication.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RESTfulCommunication.this, getApplicationContext().
+                        getString(R.string.updateStatus) + throwable.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == RESULT_OK && resultCode == RESULT_OK)
+        {
+            Log.d("ROBERT", "RETURNED WITH FINISH");
+        }
+        else if(requestCode == RESULT_OK && resultCode == RESULT_CANCELED)
+        {
+            Log.d("ROBERT", "RETURNED WITH CANCEL");
+        }
+    }
+
+    Runnable mDiagnosticsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long future = System.currentTimeMillis() + SLEEP_PERIOD;
+            while(System.currentTimeMillis() < future)
+            {
+                Call<ResponseBody> mCall = ApiUtils.getUserService().periodicDiagnosticsRequest
+                        (getApplicationContext().getString(R.string.DiagnosticsEvent));
+                mCall.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.isSuccessful()){
+                            if(response.body() != null)
+                            {
+                                try{
+                                    mJSONObject = new JSONObject(response.body().string());
+                                    Message mDiagnosticsMessage = new Message();
+                                    mDiagnosticsMessage.obj = mJSONObject;
+                                    mDiagnosticsDataHandler.sendMessage(mDiagnosticsMessage);
+
+                                }
+                                catch (Exception exception){
+                                    Toast.makeText(RESTfulCommunication.this, exception.
+                                            getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                        Toast.makeText(RESTfulCommunication.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+                SystemClock.sleep(SLEEP_PERIOD);
+                future += SLEEP_PERIOD;
+            }
+            }
+    };
 
 }

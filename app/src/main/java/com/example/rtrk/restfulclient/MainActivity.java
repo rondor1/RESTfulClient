@@ -25,8 +25,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static int LOGOUT_RESULT = 13;
-
     ImageView mImageView;   //<! Top image on login screen
     EditText mUsernameText; //<! Username edit box
     EditText mPasswordText; //<! Password edit box
@@ -112,22 +110,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if(response.body() != null){
                         try{
                             mJSONObject = new JSONObject(response.body().string());
-                            if(mJSONObject.getString("ServerLogin").equals("Access permitted")){
-                                startActivityForResult(mRESTfulCommIntent, LOGOUT_RESULT);
-                            }
-                            else{
-                                try{
-                                    /**LOGIN UNSUCCESSFUL, display message!**/
-                                    Toast.makeText(MainActivity.this,
-                                            mJSONObject.getString("ServerLogin"),
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                                catch (Exception excp){
-
-                                }
+                            if(mJSONObject.getString("ServerResponse").equals("Access Permitted")){
+                                startActivity(mRESTfulCommIntent);
                             }
                         }
                         catch (Exception Exception){
+                            Toast.makeText(MainActivity.this, getApplicationContext().
+                                    getString(R.string.wrongCredentials), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -135,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "THROWABLE : "+throwable.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

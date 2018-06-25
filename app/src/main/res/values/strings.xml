@@ -2,30 +2,46 @@
     <string name="app_name">RESTful Client</string>
     <!-- USER STRINGS. -->
 
-        <!-- MAIN ACTIVITY. -->
-        <string name="username">Username</string>
-        <string name="password">Password</string>
-        <string name="loginButton">Login</string>
-        <string name="usernameMissing">Username required!</string>
-        <string name="passwordMissing">Password required!</string>
-        <string name="wrongCredentials">Wrong username or password!</string>
-        <string name="invalidResponse">Invalid response from server!</string>
-        <string name="tryAgain">Error! Try logging in again!</string>
-        <!-- RESTFUL COMMUNICATION. -->
-        <string name="getCPU">Get CPU Load</string>
-        <string name="getRAM">Get RAM Load</string>
-        <string name="getStorage">Get Storage Status</string>
-        <!-- RESTFUL MESSAGES. -->
-        <string name="CPU">cpu</string>
-        <string name="load">load</string>
-        <string name="RAM">ram</string>
-        <string name="Storage">storage</string>
-        <string name="Status">status</string>
-        <string name="InformationScreen">Alpha Board Information</string>
-        <!-- RESTFUL LAYOUT TEXT. -->
-        <string name="TotalCPULoad">Total CPU Load : </string>
-        <string name="CurrentProcessLoad">Current Process CPU Load :</string>
-        <string name="ProcessRAMUsage">Total physical RAM utilization  : </string>
-        <string name="CurrentlyUsedRAM">VMEM used by this process : </string>
-        <string name="UnitName">KB</string>
+    <!-- MAIN ACTIVITY. -->
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="loginButton">Login</string>
+    <string name="usernameMissing">Username required!</string>
+    <string name="passwordMissing">Password required!</string>
+    <string name="wrongCredentials">Wrong username or password!</string>
+    <string name="invalidResponse">Invalid response from server!</string>
+    <string name="tryAgain">Error! Try logging in again!</string>
+    <!-- RESTFUL COMMUNICATION. -->
+    <string name="performUpdate">Perform Update</string>
+    <string name="getRAM">Get RAM Load</string>
+    <string name="getStorage">Get Storage Status</string>
+    <!-- RESTFUL MESSAGES. -->
+    <string name="CPU">cpu</string>
+    <string name="load">load</string>
+    <string name="RAM">ram</string>
+    <string name="Storage">storage</string>
+    <string name="Status">status</string>
+    <string name="InformationScreen">Alpha Board Information</string>
+    <!-- RESTFUL LAYOUT TEXT. -->
+    <string name="TotalCPULoad">Total CPU Load : </string>
+    <string name="CurrentProcessLoad">Current Process CPU Load :</string>
+    <string name="ProcessRAMUsage">Total physical RAM utilization  : </string>
+    <string name="CurrentlyUsedRAM">VMEM used by this process : </string>
+    <string name="UnitName">KB</string>
+    <!-- EVENTS. -->
+    <string name="updaterEvent">updater</string>
+    <!-- UPDATER EVENTS. -->
+    <string name="ipAddress">178.79.186.62</string>
+    <string name="port">8080</string>
+    <string name="packageName">UCM_Test_SwPkg.tar.gz</string>
+    <string name="updateStatus">Update status: </string>
+    <!-- COMBINER EVENTS. -->
+    <string name="FullscreenLayout">fullscreen</string>
+    <string name="SplitLayout">split-view</string>
+    <string name="UnevenSplitLayout">uneven-split</string>
+    <string name="ChooseSetup">Combiner settings</string>
+    <string name="FinishSetup">Send layout</string>
+    <string name="CancelSetup">Cancel layout change</string>
+    <!-- DIAGNOSTICS EVENT. -->
+    <string name="DiagnosticsEvent">diagnostics</string>
 </resources>
