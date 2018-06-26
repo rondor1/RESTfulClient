@@ -16,11 +16,7 @@
     <string name="getRAM">Get RAM Load</string>
     <string name="getStorage">Get Storage Status</string>
     <!-- RESTFUL MESSAGES. -->
-    <string name="CPU">cpu</string>
-    <string name="load">load</string>
-    <string name="RAM">ram</string>
-    <string name="Storage">storage</string>
-    <string name="Status">status</string>
+
     <string name="InformationScreen">Alpha Board Information</string>
     <!-- RESTFUL LAYOUT TEXT. -->
     <string name="TotalCPULoad">Total CPU Load : </string>
@@ -30,18 +26,36 @@
     <string name="UnitName">KB</string>
     <!-- EVENTS. -->
     <string name="updaterEvent">updater</string>
+    <string name="combinerEvent">combiner</string>
     <!-- UPDATER EVENTS. -->
     <string name="ipAddress">178.79.186.62</string>
     <string name="port">8080</string>
     <string name="packageName">UCM_Test_SwPkg.tar.gz</string>
     <string name="updateStatus">Update status: </string>
     <!-- COMBINER EVENTS. -->
-    <string name="FullscreenLayout">fullscreen</string>
-    <string name="SplitLayout">split-view</string>
-    <string name="UnevenSplitLayout">uneven-split</string>
+    <string name="CombinerScreen">Combiner Parameters</string>
     <string name="ChooseSetup">Combiner settings</string>
-    <string name="FinishSetup">Send layout</string>
-    <string name="CancelSetup">Cancel layout change</string>
+    <string name="SetLayout">Set layout change</string>
+    <string name="CancelLayout">Discard layout change</string>
+    <string name="Resolution">Resolution</string>
+    <string name="FHD">1080p</string>
+    <string name="FHDi">1080i</string>
+    <string name="HDReady">720p</string>
+    <string name="WXGA">1360x768</string>
+    <string name="XGA">1024x768</string>
+    <string name="SplitStyle">Split style</string>
+    <string name="FullscreenLayout">Fullscreen view</string>
+    <string name="SplitLayout">Split screen view</string>
+    <string name="UnevenSplitLayout">Uneven split screen</string>
+    <string name="Port">Port</string>
+    <string name="PortNum1">1</string>
+    <string name="PortNum2">2</string>
+    <string name="PortNum3">3</string>
+    <string name="PortNum4">4</string>
     <!-- DIAGNOSTICS EVENT. -->
     <string name="DiagnosticsEvent">diagnostics</string>
+    <!-- Combiner messages -->
+    <string name="fullscreen">fullscreen</string>
+    <string name="split_screen">split-view</string>
+    <string name="uneven_split">uneven-split</string>
 </resources>

@@ -5,7 +5,7 @@ package com.example.rtrk.restfulclient.remote;
  */
 public class ApiUtils {
 
-    private final static String BASE_URL = "http://192.168.100.153:8080/";
+    private final static String BASE_URL = "http://192.168.100.99:8084/";
     public static UserService getUserService(){
         return RetrofitClient.getRetrofit(BASE_URL).create(UserService.class);
     }

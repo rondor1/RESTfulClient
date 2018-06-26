@@ -31,6 +31,11 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
     Button mCombinerSetup;
     Intent mCombinerIntent;
 
+    String newLineString = "\\\\n";
+    String openBracketString = "{";
+    String closedBracketString = "}";
+    String payloadString = "payload";
+    String marksString = "\"\"";
     Thread mDiagnosticsThread;
 
     /***
@@ -46,7 +51,13 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
         public void handleMessage(Message msg) {
         JSONObject receivedData = (JSONObject) msg.obj;
             try{
-                mDiagnosticsTextView.setText(mJSONObject.getString("payload").toString());
+                String DiagnosticsString = mJSONObject.getString("payload");
+                DiagnosticsString = DiagnosticsString.replace(newLineString, "");
+                DiagnosticsString = DiagnosticsString.replace(openBracketString, "");
+                DiagnosticsString = DiagnosticsString.replace(closedBracketString, "");
+                DiagnosticsString = DiagnosticsString.replace(payloadString, "");
+                DiagnosticsString = DiagnosticsString.replace(marksString, "");
+                mDiagnosticsTextView.setText(DiagnosticsString);
             }
             catch (Exception exception){
                 exception.printStackTrace();
