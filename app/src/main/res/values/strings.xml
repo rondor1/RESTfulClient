@@ -52,6 +52,7 @@
     <string name="PortNum2">2</string>
     <string name="PortNum3">3</string>
     <string name="PortNum4">4</string>
+    <string name="Status">Combiner status:</string>
     <!-- DIAGNOSTICS EVENT. -->
     <string name="DiagnosticsEvent">diagnostics</string>
     <!-- Combiner messages -->

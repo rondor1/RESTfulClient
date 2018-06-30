@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.rtrk.restfulclient.remote.ApiUtils;
 
+import org.json.JSONObject;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -223,8 +225,12 @@ public class CombinerSetup extends AppCompatActivity implements View.OnClickList
         mCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                JSONObject mJSONResponse;
                 try{
-                    Log.d("ROBERT", response.body().string());
+                    mJSONResponse = new JSONObject(response.body().string());
+                    Toast.makeText(CombinerSetup.this, getApplicationContext().
+                            getString(R.string.Status) + mJSONResponse.getString("payload"),
+                            Toast.LENGTH_SHORT).show();
                 }
                 catch (Exception exception){
                     Log.d("ROBERT", exception.getMessage());

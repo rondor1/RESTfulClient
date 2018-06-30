@@ -31,11 +31,10 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
     Button mCombinerSetup;
     Intent mCombinerIntent;
 
-    String newLineString = "\\\\n";
+    String marks = "\"";
     String openBracketString = "{";
     String closedBracketString = "}";
     String payloadString = "payload";
-    String marksString = "\"\"";
     Thread mDiagnosticsThread;
 
     /***
@@ -51,12 +50,12 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
         public void handleMessage(Message msg) {
         JSONObject receivedData = (JSONObject) msg.obj;
             try{
+
                 String DiagnosticsString = mJSONObject.getString("payload");
-                DiagnosticsString = DiagnosticsString.replace(newLineString, "");
                 DiagnosticsString = DiagnosticsString.replace(openBracketString, "");
                 DiagnosticsString = DiagnosticsString.replace(closedBracketString, "");
                 DiagnosticsString = DiagnosticsString.replace(payloadString, "");
-                DiagnosticsString = DiagnosticsString.replace(marksString, "");
+                DiagnosticsString = DiagnosticsString.replace(marks, "");
                 mDiagnosticsTextView.setText(DiagnosticsString);
             }
             catch (Exception exception){
@@ -111,9 +110,18 @@ public class RESTfulCommunication extends AppCompatActivity implements View.OnCl
                 if(response.isSuccessful()){
                     if(response.body() != null){
                         try{
+                            JSONObject mJSONResponse;
+                            String data = "Update temporary data";
+                            try{
+                                mJSONResponse = new JSONObject(response.body().string());
+                                data = mJSONResponse.getString("payload");
+                            }
+                            catch (Exception mException){
+                                mException.printStackTrace();
+                            }
                             Toast.makeText(RESTfulCommunication.this, getApplicationContext().
                                             getString(R.string.updateStatus) +
-                                            response.body().string()
+                                            data
                                     , Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception exception){
